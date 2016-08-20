@@ -1,8 +1,35 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" type="text/css" href="test.css">
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <style>
+    button {
+      background-color: #4db8ff;
+      border-radius: 10px;
+  
+      font-size: 20px;
+
+      padding: 10px;
+      margin: 0 10px;
+    }
+
+    .userName {
+      text-decoration: underline;
+    }
+
+/*    .tweets {
+      background-color: #e6f5ff;
+      border: 2px solid #000000; 
+      border-radius: 10px;
+
+      font-size: 20px;
+      padding: 10px 1%;
+      margin: 10px 1%;
+    } */
+    </style>>
+
   </head>
   <body>
     <script>
@@ -11,14 +38,29 @@
         var $body = $('body');
         $body.html('');
 
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
+        //add a button on the top of the body
+        $refreshButton = $('<button class="refresh"></botton>');
+        $refreshButton.text("CHECK NEW TWEETS");
+        $refreshButton.appendTo($body);
+        //listen to the botton: everytime the button is clicked, the page will be reload
+        $('.refresh').on('click',function(){
+          loadTweets();
+        });
+
+        function loadTweets() {
+          $('.tweets').remove();
+          var index = 0;
+          while(index < streams.home.length){
+            var tweet = streams.home[index];
+            var $tweet = $('<div class="tweets"></div>');
+            ($tweet).append('@');
+            ($tweet).append($('<a class="userName"></a>').text(tweet.user));
+            ($tweet).append(': ' + tweet.message + ' [' + tweet.created_at + '] ')
+            $('button').after($tweet);
+            index += 1;
+          }
         }
+        loadTweets();
 
       });
 
