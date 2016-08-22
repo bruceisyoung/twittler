@@ -3,8 +3,11 @@
   <head>
     <link rel="stylesheet" type="text/css" href="test.css">
     <script src="jquery.js"></script>
+    <!-- import a timeago module from internet -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.5.3/jquery.timeago.js"></script>
     <script src="data_generator.js"></script>
-    <style> /***   Define the style of the webpage   ***/
+    <style> 
+    /***   Define the style of the webpage   ***/
     button {
       background-color: #4db8ff;
       border-radius: 10px;
@@ -55,7 +58,7 @@
           var $tweet = $('<div class="tweets"></div>');
           ($tweet).append('@');
           ($tweet).append($('<a class="userName"></a>').text(tweet.user));
-          ($tweet).append(': ' + tweet.message + ' [' + tweet.created_at + '] ');
+          ($tweet).append(': ' + tweet.message + ' [' + jQuery.timeago(tweet.created_at) + '] ');
           $('#send').after($tweet);
         }
 
@@ -85,12 +88,13 @@
         //define a button(refresh button)
         $refreshButton = $('<button id="refresh"></botton>');
         $refreshButton.text("REFRESH");
-        $refreshButton.appendTo($body);     
-        $('<input id="myName" type="text"/>').appendTo($body);   //
-        $('<input id="message" type="text"/>').appendTo($body);     //
-        $('#myName').val("My Name");
-        $('#message').val("Say Something");
-                //define a button(send button)
+        $refreshButton.appendTo($body);
+        //define inputs
+        $('<input id="myName" type="text"/>').appendTo($body);   //define first input: username
+        $('<input id="message" type="text"/>').appendTo($body);  //define second input: comment
+        $('#myName').val("My Name");        //put default username inside the input textbox
+        $('#message').val("Say Something"); //put default message inside the input textbox
+        //define a button(send button)
         $sendButton = $('<button id="send"></botton>');
         $sendButton.text("SEND");
         $sendButton.appendTo($body);   
@@ -117,9 +121,6 @@
           loadUserTweets(userClicked);
         });
       });
-
-
-
 
     </script>
   </body>
