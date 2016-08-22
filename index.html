@@ -8,17 +8,31 @@
     button {
       background-color: #4db8ff;
       border-radius: 10px;
-  
       font-size: 20px;
-
       padding: 10px;
-      margin: 0 10px;
+      margin: 0 5px;
     }
-
+    input{
+      border-radius: 10px;
+      font-size: 20px;
+      padding: 10px;
+      margin: 0 5px;
+    }
+    #refresh {
+      width: 10%;
+    }
+    #send {
+      width: 10%;
+    }
+    #myName {
+      width: 10%;
+    }
+    #message {
+      width: 57%;
+    }
     a {
       text-decoration: underline;
     }
-
     .tweets {
       background-color: #e6f5ff;
       border: 2px solid #000000; 
@@ -42,7 +56,7 @@
           ($tweet).append('@');
           ($tweet).append($('<a class="userName"></a>').text(tweet.user));
           ($tweet).append(': ' + tweet.message + ' [' + tweet.created_at + '] ');
-          $('button').after($tweet);
+          $('#send').after($tweet);
         }
 
         //loadTweets Function: append all the tweets stored inside the global variable streams.home
@@ -65,18 +79,36 @@
             }    
         }
 
-
+        //start from here: Page Definition
         var $body = $('body');
         $body.html('');
-        //add a button on the top of the body
-        $refreshButton = $('<button class="refresh"></botton>');
-        $refreshButton.text("CHECK NEW TWEETS");
-        $refreshButton.appendTo($body);
+        //define a button(refresh button)
+        $refreshButton = $('<button id="refresh"></botton>');
+        $refreshButton.text("REFRESH");
+        $refreshButton.appendTo($body);     
+        $('<input id="myName" type="text"/>').appendTo($body);   //
+        $('<input id="message" type="text"/>').appendTo($body);     //
+        $('#myName').val("My Name");
+        $('#message').val("Say Something");
+                //define a button(send button)
+        $sendButton = $('<button id="send"></botton>');
+        $sendButton.text("SEND");
+        $sendButton.appendTo($body);   
         //load the tweets stored inside the global variable onto the page by calling functino: loadTweets
         loadTweets(); 
 
         //listen to the botton: everytime the button is clicked, the page will be reload by calling function loadTweets
-        $('.refresh').on('click',function(){
+        $('#refresh').on('click',function(){
+          loadTweets();
+        });
+        $('#send').on('click',function(){
+          var tweet = {};
+          tweet.user = $('#myName').val();
+          tweet.message = $('#message').val();
+          tweet.created_at = new Date();
+          if(streams.users[tweet.user]==null)
+            streams.users[tweet.user] = [];
+          addTweet(tweet);
           loadTweets();
         });
         //listen to the whole document, and check whether '.userName' has been clicked or not
@@ -84,7 +116,6 @@
           var userClicked = this;
           loadUserTweets(userClicked);
         });
-
       });
 
 
