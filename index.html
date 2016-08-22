@@ -4,7 +4,7 @@
     <link rel="stylesheet" type="text/css" href="test.css">
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
-    <style>
+    <style> /***   Define the style of the webpage   ***/
     button {
       background-color: #4db8ff;
       border-radius: 10px;
@@ -15,11 +15,11 @@
       margin: 0 10px;
     }
 
-    .userName {
+    a {
       text-decoration: underline;
     }
 
-/*    .tweets {
+    .tweets {
       background-color: #e6f5ff;
       border: 2px solid #000000; 
       border-radius: 10px;
@@ -27,7 +27,7 @@
       font-size: 20px;
       padding: 10px 1%;
       margin: 10px 1%;
-    } */
+    } 
     </style>>
 
   </head>
@@ -35,34 +35,60 @@
     <script>
 
       $(document).ready(function(){
-        var $body = $('body');
-        $body.html('');
+        //Functions Definition:
+        //tweetGenerate Function: generate one single tweet with a tweet object from the server 
+        function tweetAppend(tweet) {
+          var $tweet = $('<div class="tweets"></div>');
+          ($tweet).append('@');
+          ($tweet).append($('<a class="userName"></a>').text(tweet.user));
+          ($tweet).append(': ' + tweet.message + ' [' + tweet.created_at + '] ');
+          $('button').after($tweet);
+        }
 
-        //add a button on the top of the body
-        $refreshButton = $('<button class="refresh"></botton>');
-        $refreshButton.text("CHECK NEW TWEETS");
-        $refreshButton.appendTo($body);
-        //listen to the botton: everytime the button is clicked, the page will be reload
-        $('.refresh').on('click',function(){
-          loadTweets();
-        });
-
+        //loadTweets Function: append all the tweets stored inside the global variable streams.home
         function loadTweets() {
           $('.tweets').remove();
           var index = 0;
           while(index < streams.home.length){
-            var tweet = streams.home[index];
-            var $tweet = $('<div class="tweets"></div>');
-            ($tweet).append('@');
-            ($tweet).append($('<a class="userName"></a>').text(tweet.user));
-            ($tweet).append(': ' + tweet.message + ' [' + tweet.created_at + '] ')
-            $('button').after($tweet);
+            tweetAppend(streams.home[index]);
             index += 1;
           }
         }
-        loadTweets();
+
+        //loadUserTweets Function: load all the tweets of a certain user stored inside the global variable streams.users. The used will be determined by the userNamed clicked by the mouse.
+        function loadUserTweets(userClicked) {
+          $('.tweets').remove();
+          var index = 0;
+          while(index < streams.users[$(userClicked).text()].length){
+            tweetAppend(streams.users[$(userClicked).text()][index]);
+            index += 1;
+            }    
+        }
+
+
+        var $body = $('body');
+        $body.html('');
+        //add a button on the top of the body
+        $refreshButton = $('<button class="refresh"></botton>');
+        $refreshButton.text("CHECK NEW TWEETS");
+        $refreshButton.appendTo($body);
+        //load the tweets stored inside the global variable onto the page by calling functino: loadTweets
+        loadTweets(); 
+
+        //listen to the botton: everytime the button is clicked, the page will be reload by calling function loadTweets
+        $('.refresh').on('click',function(){
+          loadTweets();
+        });
+        //listen to the whole document, and check whether '.userName' has been clicked or not
+        $(document).on('click','.userName',function(){
+          var userClicked = this;
+          loadUserTweets(userClicked);
+        });
 
       });
+
+
+
 
     </script>
   </body>
